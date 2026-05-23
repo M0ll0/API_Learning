@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animals</title>
+</head>
+<body onload="init()">
+    <h1>Animals</h1>
+    <label for="id_animal">Choose your animal by ID: </label>
+    <select name="id_animal" id="id_animal"></select>
+    <label for="espece">Choose specy of animal: </label>
+    <select name="espece" id="espece"></select>
+    <table id="animalList">
+        <thead>
+
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+
+    <script>
+        const NUMBER_OF_IDs = 23;
+
+        async function loadAnimals(id_animal,espece) {
+            const response = await fetch(`http://localhost:3000/animaux?id_animal=${id_animal}&espece=${espece}`);
+            const data = await response.json();
+            loadTable(data)
+
+        }
+
+        function fillIdOption(){
+            const select = document.getElementById('id_animal');
+            
+            for(let i=0;i<=NUMBER_OF_IDs;i++){
+                let opt = document.createElement('option');
+                opt.value = (i==0?'':i);
+                opt.textContent = (i==0?'':i);
+                select.appendChild(opt);
+            }
+
+        }
+
+        function fillEspeceOption(){
+            const select = document.getElementById('espece');
+            const especes = ['','chat','chien','souris','kangourou','lama','koala'];
+            for(const e of especes){
+                let opt = document.createElement('option');
+                opt.value = e;
+                opt.textContent = e;
+                select.appendChild(opt);
+            }
+        }
+
+        function loadTable(data){
+            const table = document.getElementById('animalList');
+            table.querySelector('thead').innerHTML = '';
+            table.querySelector('tbody').innerHTML = '';
+
+            let headers = Object.keys(data.data[0]);
+            const thRow = document.createElement('tr');
+            for (const h of headers) {
+                    const header = document.createElement('th');
+                    header.textContent = h
+                    thRow.appendChild(header);
+                }
+                table.querySelector('thead').appendChild(thRow);
+            data.data.forEach(animal => {
+                const tRow = document.createElement('tr');
+                let rowContent = []
+                rowContent.push(animal.ID_animal);
+                rowContent.push(animal.Nom_animal);
+                rowContent.push(animal.Maitre);
+                rowContent.push(animal.Espece);
+                rowContent.push(animal.Age_animal);
+                for (const cellData of rowContent) {
+                    const cell = document.createElement('td');
+                    cell.textContent = cellData
+                    tRow.appendChild(cell);
+                }
+        
+                table.querySelector('tbody').appendChild(tRow);
+            });
+        }
+
+        function init(){
+            fillIdOption();
+            fillEspeceOption();
+            loadAnimals('','');
+            const optionId = document.getElementById('id_animal');
+            const optionSpecy = document.getElementById('espece');
+
+            optionId.addEventListener('change', (e)=>{
+                const animal_id = e.target.value;
+                const espece = document.getElementById('espece').value;
+                loadAnimals(animal_id,espece);
+            })
+
+            optionSpecy.addEventListener('change', (e)=>{
+                const espece = e.target.value;
+                const animal_id = document.getElementById('id_animal').value;
+                loadAnimals(animal_id,espece);
+            })
+
+        }
+    </script>
+</body>
+</html>
