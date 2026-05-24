@@ -64,8 +64,8 @@ async function loginUserService(username, password){
             };
         }
          const payload = {
-                "user_id" : result.rows[0].ID_user,
-                "username" : result.rows[0].username
+                "user_id" : result[0].ID_user,
+                "username" : result[0].username
             }
         const token = jwt.sign(payload, secret, { expiresIn: "1h"});
         console.log('The returned token :' + token);
