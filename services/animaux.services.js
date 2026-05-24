@@ -15,7 +15,7 @@ async function getAnimauxData(id_animal,espece){
 
 
     let queryString =
-        "SELECT id_animal, nom_animal, nom_personne as 'Maitre', e.espece, age_animal " +
+        "SELECT id_animal, nom_animal, nom_personne as \"Maitre\", e.espece, age_animal " +
         "FROM public.animaux a " +
         "LEFT JOIN public.Especes e ON a.id_espece = e.id_espece " +
         "LEFT JOIN public.personnes p ON p.id_personne = a.id_personne " + 
