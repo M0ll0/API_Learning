@@ -2,9 +2,10 @@
 
 // responsabilité : connecter a la base de données avec les infos de .env. retourne un connection pool utilisé par plusieurs services.
 require('dotenv').config();
-const sql = require('mssql');
+/* const sql = require('mssql'); */
+/* const sql = require('pg'); */
 
-const config = { user: process.env.DB_USER,
+/* const config = { user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     server: process.env.DB_SERVER,
     port: parseInt(process.env.DB_PORT),
@@ -33,4 +34,13 @@ async function getConnection() {
     return poolPromise;
 }
 
-module.exports = { sql, getConnection };
+module.exports = { sql, getConnection }; */
+
+const { Pool } = require('pg');
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false }
+});
+
+module.exports = pool;

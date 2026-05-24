@@ -23,7 +23,7 @@ async function loginUser(req,res,next){
             res.status(200);
             res.cookie("token", loginSuccessfull.token, {
                 httpOnly: true,
-                secure: false,
+                secure: true,
                 sameSite: "lax",
                 maxAge: 3600000
             });
@@ -48,7 +48,7 @@ async function createUser(req,res,next){
         if(!result){
             
             let result = await postCreateUser(newUsername,newPassword);
-            res.json({"Data": result.rowsAffected});
+            res.json({"Data": result.rows.length});
         }else{
             res.send("This username already exists, please use another username.")
         }

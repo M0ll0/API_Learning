@@ -1,5 +1,5 @@
 
-const { sql, getConnection } = require('../db');
+const pool = require('../db');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 //require('dotenv').config();
@@ -7,50 +7,47 @@ const jwt = require('jsonwebtoken');
 const secret = process.env.JWT_SECRET;
 
 async function retrieveUserDataForToken(username){
-    const pool = await getConnection();
+
 
     let queryString =
         "SELECT [ID_user],[username] " +
         "FROM [PersonnesEtAnimaux_].[dbo].[Users] " +
-        "WHERE username = @username";
+        "WHERE username = $1";
 
-    let request = pool.request();
+    let params = [];
 
     if (username && username !== "") {
-        request.input("username", sql.VarChar, username);
+        params.push(username);
     }
-    let result = await request.query(queryString);
+    let result = await pool.query(queryString,params);
     console.log(result);
-    return result.recordset;
+    return result.rows;
 
 }
 
 async function findPasswordHashByUsername(username){
 
 
-    const pool = await getConnection();
-
     let queryString =
         "SELECT [password_hash] " +
         "FROM [PersonnesEtAnimaux_].[dbo].[Users]";
 
-    let conditions = [];
-    let request = pool.request();
+    let params = [];
 
     if (username && username !== "") {
-        conditions.push("username = @username");
-        request.input("username", sql.VarChar, username);
+        params.push(username);
     }
 
-    if (conditions.length > 0) {
-        queryString += " WHERE " + conditions.join(" AND ");
+    if (params.length > 0) {
+        queryString += ` WHERE username= $${params.length}`;
     }else{
         throw new Error("Data required: username needs to be given to identify the user.")
     }
 
-    let result = await request.query(queryString);
-    return result.recordset;
+    let result = await pool.query(queryString,params);
+    return result.rows;
 }
+
 async function loginUserService(username, password){
         const successUserAndPassword = await verifyUserAndPassord(username,password);
         if (!successUserAndPassword){
@@ -60,15 +57,15 @@ async function loginUserService(username, password){
                 };
         }
         const result = await retrieveUserDataForToken(username);
-        if (!result || result.length === 0){
+        if (!result || result.rows.length === 0){
            return {
                 success: false,
                 message: "User not found"
             };
         }
          const payload = {
-                "user_id" : result[0].ID_user,
-                "username" : result[0].username
+                "user_id" : result.rows[0].ID_user,
+                "username" : result.rows[0].username
             }
         const token = jwt.sign(payload, secret, { expiresIn: "1h"});
         console.log('The returned token :' + token);
@@ -82,7 +79,7 @@ async function verifyUserAndPassord(username, password){
             try{
             let result =  await findPasswordHashByUsername(username);
 //            let successfulLogin
-            if (result.length===0){
+            if (result.rows.length===0){
                 //early return is better : if not found, return prevents to run more code. also, less variables
                 return false;
             }
@@ -104,30 +101,30 @@ async function verifyUserAndPassord(username, password){
 
 async function getUserExist(username){
 
-    const pool = await getConnection();
     let queryString =
             "SELECT [ID_user] " +
             "FROM [PersonnesEtAnimaux_].[dbo].[Users] " +
-            "WHERE username = @username";
-    
-    let request = pool.request();
-    request.input("username", sql.VarChar, username);
-    let result = await request.query(queryString);
-    return (result.recordset.length>0);
+            "WHERE username = $1";
+    let params = [];
+
+    params.push(username);
+
+    let result = await pool.query(queryString,params);
+    return (result.rows.length>0);
 
 }
 
 async function postCreateUser(username, password){
-    const pool = await getConnection();
+
     const PasswordHashed = await hashPassword(password);
     let queryString =
         "INSERT INTO [PersonnesEtAnimaux_].[dbo].[Users] " +
         "([username],[password_hash]) " +
-        "VALUES(@username, @passwordHash)";
-    let request = pool.request();
-    request.input("username", sql.VarChar, username);
-    request.input("passwordHash", sql.VarChar, PasswordHashed);
-    let result = await request.query(queryString);
+        "VALUES($1, $2)";
+    let params=[];
+    params.push(username);
+    params.push(PasswordHashed);
+    let result = await pool.query(queryString,params);
     return result;
 }
 
