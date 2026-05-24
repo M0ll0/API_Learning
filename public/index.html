@@ -22,7 +22,7 @@
 
     <script>
         const NUMBER_OF_IDs = 23;
-        const API_BASE = process.env.APP_API_URL;
+        const API_BASE = "https://api-learning-153p.onrender.com";
 
         async function loadAnimals(id_animal,espece) {
             const response = await fetch(`${API_BASE}/animaux?id_animal=${id_animal}&espece=${espece}`);
