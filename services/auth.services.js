@@ -84,7 +84,7 @@ async function verifyUserAndPassord(username, password){
                 return false;
             }
             
-            const passHash = result.rows[0].password_hash;
+            const passHash = result[0].password_hash;
             //console.log(passHash);
             successfulLogin  = await verifyPassword(password,passHash);
             return successfulLogin;
