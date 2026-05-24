@@ -49,6 +49,17 @@ app.use(`/auth`, authRoutes);
 app.use((err, req, res, next) => {
     console.error(err);
 
+    console.error(err);
+
+    if (process.env.NODE_ENV === "development") {
+
+        return res.status(500).json({
+            message: err.message,
+            stack: err.stack
+        });
+
+    }
+
     res.status(500).json({
         message: "Internal server error"
     });
