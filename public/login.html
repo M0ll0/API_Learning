@@ -9,7 +9,7 @@
     <h1>Login Page</h1>
     <fieldset>
         <legend>Login please</legend>
-        <form id="loginForm" action="http://localhost:3000/login" method="post">
+        <form id="loginForm" method="post">
             <label for="username">Username:</label>
             <input type="text" name="username" id="username">
             <label for="password">Password:</label>
@@ -19,11 +19,12 @@
     </fieldset>
 
     <script>
+        const API_BASE = process.env.APP_API_URL;
         const loginForm = document.getElementById('loginForm');
         loginForm.addEventListener("submit", (e)=>{
             e.preventDefault();
             const formData = new FormData(loginForm);
-            fetch('http://localhost:3000/auth/login',{
+            fetch(`${API_BASE}/auth/login`,{
                 method :'POST',
                 credentials: 'include',
                 headers: {
@@ -34,7 +35,7 @@
             .then(data => {
                 console.log(data)
                 if(data.success){
-                    window.location = 'http://localhost:3000/index.html';
+                    window.location = `${API_BASE}/index.html`;
                 }
             }).catch((err)=>{
                 console.error('Error :',err);

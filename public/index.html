@@ -22,9 +22,10 @@
 
     <script>
         const NUMBER_OF_IDs = 23;
+        const API_BASE = process.env.APP_API_URL;
 
         async function loadAnimals(id_animal,espece) {
-            const response = await fetch(`http://localhost:3000/animaux?id_animal=${id_animal}&espece=${espece}`);
+            const response = await fetch(`${API_BASE}/animaux?id_animal=${id_animal}&espece=${espece}`);
             const data = await response.json();
             loadTable(data)
 
