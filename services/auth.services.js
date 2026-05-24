@@ -57,7 +57,7 @@ async function loginUserService(username, password){
                 };
         }
         const result = await retrieveUserDataForToken(username);
-        if (!result || result.rows.length === 0){
+        if (!result || result.length === 0){
            return {
                 success: false,
                 message: "User not found"
