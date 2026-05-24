@@ -27,6 +27,11 @@
         async function loadAnimals(id_animal,espece) {
             const response = await fetch(`${API_BASE}/animaux?id_animal=${id_animal}&espece=${espece}`);
             const data = await response.json();
+            console.log(data);
+            if (!response.ok) {
+                console.error("Backend error:", data);
+                return;
+            }
             loadTable(data)
 
         }
