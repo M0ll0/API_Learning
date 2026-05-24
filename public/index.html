@@ -75,11 +75,11 @@
             data.data.forEach(animal => {
                 const tRow = document.createElement('tr');
                 let rowContent = []
-                rowContent.push(animal.ID_animal);
-                rowContent.push(animal.Nom_animal);
+                rowContent.push(animal.id_animal);
+                rowContent.push(animal.nom_animal);
                 rowContent.push(animal.Maitre);
-                rowContent.push(animal.Espece);
-                rowContent.push(animal.Age_animal);
+                rowContent.push(animal.espece);
+                rowContent.push(animal.age_animal);
                 for (const cellData of rowContent) {
                     const cell = document.createElement('td');
                     cell.textContent = cellData
