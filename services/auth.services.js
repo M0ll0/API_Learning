@@ -10,8 +10,8 @@ async function retrieveUserDataForToken(username){
 
 
     let queryString =
-        "SELECT [ID_user],[username] " +
-        "FROM [PersonnesEtAnimaux_].[dbo].[Users] " +
+        "SELECT ID_user,username " +
+        "FROM public.users " +
         "WHERE username = $1";
 
     let params = [];
@@ -29,8 +29,8 @@ async function findPasswordHashByUsername(username){
 
 
     let queryString =
-        "SELECT [password_hash] " +
-        "FROM [PersonnesEtAnimaux_].[dbo].[Users]";
+        "SELECT password_hash " +
+        "FROM public.Users";
 
     let params = [];
 
@@ -102,8 +102,8 @@ async function verifyUserAndPassord(username, password){
 async function getUserExist(username){
 
     let queryString =
-            "SELECT [ID_user] " +
-            "FROM [PersonnesEtAnimaux_].[dbo].[Users] " +
+            "SELECT ID_user " +
+            "FROM public.users " +
             "WHERE username = $1";
     let params = [];
 
@@ -118,8 +118,8 @@ async function postCreateUser(username, password){
 
     const PasswordHashed = await hashPassword(password);
     let queryString =
-        "INSERT INTO [PersonnesEtAnimaux_].[dbo].[Users] " +
-        "([username],[password_hash]) " +
+        "INSERT INTO public.users " +
+        "(username,password_hash) " +
         "VALUES($1, $2)";
     let params=[];
     params.push(username);

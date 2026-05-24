@@ -16,9 +16,9 @@ async function getAnimauxData(id_animal,espece){
 
     let queryString =
         "SELECT ID_animal, Nom_animal, Nom_personne as 'Maitre', e.Espece, Age_animal " +
-        "FROM dbo.Animaux a " +
-        "LEFT JOIN Especes e ON a.ID_espece = e.ID_espece " +
-        "LEFT JOIN Personnes p ON p.ID_personne = a.ID_personne" + 
+        "FROM public.Animaux a " +
+        "LEFT JOIN public.Especes e ON a.ID_espece = e.ID_espece " +
+        "LEFT JOIN public.Personnes p ON p.ID_personne = a.ID_personne " + 
         "WHERE 1=1";
 
     let params = [];
