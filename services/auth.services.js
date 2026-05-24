@@ -79,7 +79,7 @@ async function verifyUserAndPassord(username, password){
         try{
             let result =  await findPasswordHashByUsername(username);
 //            let successfulLogin
-            if (result.rows.length===0){
+            if (result.length===0){
                 //early return is better : if not found, return prevents to run more code. also, less variables
                 return false;
             }
