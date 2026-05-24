@@ -76,7 +76,7 @@ async function loginUserService(username, password){
 }
 
 async function verifyUserAndPassord(username, password){
-            try{
+        try{
             let result =  await findPasswordHashByUsername(username);
 //            let successfulLogin
             if (result.rows.length===0){
@@ -84,7 +84,7 @@ async function verifyUserAndPassord(username, password){
                 return false;
             }
             
-            const passHash = result[0].password_hash;
+            const passHash = result.rows[0].password_hash;
             //console.log(passHash);
             successfulLogin  = await verifyPassword(password,passHash);
             return successfulLogin;
@@ -95,7 +95,7 @@ async function verifyUserAndPassord(username, password){
             } */
             
         }catch(err){
-            next(err);
+            throw err;
         }
 }
 
