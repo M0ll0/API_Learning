@@ -15,10 +15,10 @@ async function getAnimauxData(id_animal,espece){
 
 
     let queryString =
-        "SELECT ID_animal, Nom_animal, Nom_personne as 'Maitre', e.Espece, Age_animal " +
-        "FROM public.Animaux a " +
-        "LEFT JOIN public.Especes e ON a.ID_espece = e.ID_espece " +
-        "LEFT JOIN public.Personnes p ON p.ID_personne = a.ID_personne " + 
+        "SELECT id_animal, nom_animal, nom_personne as 'Maitre', e.nspece, age_animal " +
+        "FROM public.animaux a " +
+        "LEFT JOIN public.Especes e ON a.id_espece = e.id_espece " +
+        "LEFT JOIN public.personnes p ON p.id_personne = a.id_personne " + 
         "WHERE 1=1";
 
     let params = [];
@@ -26,12 +26,12 @@ async function getAnimauxData(id_animal,espece){
 
     if (id_animal && !isNaN(id_animal)) {
         params.push(id_animal);
-        queryString += ` AND ID_animal = $${params.length}`;
+        queryString += ` AND id_animal = $${params.length}`;
     }
 
     if (espece && espece !== "") {
-        params.push("e.Espece = @espece");
-        queryString += ` AND e.Espece = $${params.length}`;
+        params.push("e.espece = @espece");
+        queryString += ` AND e.espece = $${params.length}`;
     }
 
     let result = await pool.query(queryString, params);

@@ -10,7 +10,7 @@ async function retrieveUserDataForToken(username){
 
 
     let queryString =
-        "SELECT ID_user,username " +
+        "SELECT id_user,username " +
         "FROM public.users " +
         "WHERE username = $1";
 
@@ -30,7 +30,7 @@ async function findPasswordHashByUsername(username){
 
     let queryString =
         "SELECT password_hash " +
-        "FROM public.Users";
+        "FROM public.users";
 
     let params = [];
 
@@ -102,7 +102,7 @@ async function verifyUserAndPassord(username, password){
 async function getUserExist(username){
 
     let queryString =
-            "SELECT ID_user " +
+            "SELECT id_user " +
             "FROM public.users " +
             "WHERE username = $1";
     let params = [];
