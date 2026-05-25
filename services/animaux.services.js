@@ -10,7 +10,17 @@
 
 
 const pool = require('../db');
+class NoDataFound extends Error{
+    constructor(message){
+        super(message);
+    
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, NoDataFound);
+    }
 
+    this.name = "Data not found";
+    }
+}
 async function getAnimauxData(id_animal,espece){
 
 
@@ -35,6 +45,9 @@ async function getAnimauxData(id_animal,espece){
     }
 
     let result = await pool.query(queryString, params);
+    if (result.rows.length==0){
+        throw new NoDataFound("There is no data in the database with the specified filters.");
+    }
     return result.rows;
 }
 

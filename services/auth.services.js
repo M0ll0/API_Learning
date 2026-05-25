@@ -6,6 +6,28 @@ const jwt = require('jsonwebtoken');
 
 const secret = process.env.JWT_SECRET;
 
+class UserNotFound extends Error{
+    constructor(message) {
+        super(message);
+
+        if (Error.captureStackTrace) {
+            Error.captureStackTrace(this, UserNotFound);
+        }
+        this.name = "UserNotFound";
+    }
+}
+
+class InvalidCredentials extends Error{
+    constructor(message) {
+        super(message);
+
+        if (Error.captureStackTrace) {
+            Error.captureStackTrace(this, InvalidCredentials);
+        }
+        this.name = "Invalid Credentials";
+    }
+}
+
 async function retrieveUserDataForToken(username){
 
 
@@ -20,6 +42,11 @@ async function retrieveUserDataForToken(username){
         params.push(username);
     }
     let result = await pool.query(queryString,params);
+
+    if (result.rows.length==0){
+        throw new UserNotFound("User name not found in database.");
+    }
+
     console.log(result);
     return result.rows;
 
@@ -45,6 +72,11 @@ async function findPasswordHashByUsername(username){
     }
 
     let result = await pool.query(queryString,params);
+
+    if (result.rows.length==0){
+        throw new UserNotFound("User name not found in database.");
+    }
+
     return result.rows;
 }
 
@@ -141,6 +173,7 @@ async function hashPassword(plainPassword) {
     const saltRounds = 12; 
     
     const hashedPassword = await bcrypt.hash(plainPassword, saltRounds);
+
     return hashedPassword;
 }
 
