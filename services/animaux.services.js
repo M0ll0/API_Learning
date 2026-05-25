@@ -30,7 +30,7 @@ async function getAnimauxData(id_animal,espece){
     }
 
     if (espece && espece !== "") {
-        params.push("e.espece = @espece");
+        params.push(espece);
         queryString += ` AND e.espece = $${params.length}`;
     }
 
