@@ -48,9 +48,16 @@ app.use(`/auth`, authRoutes);
 
 app.use((err, req, res, next) => {
     console.error(err);
-
-    console.error(err);
-
+    let message = "";
+    switch (err.name){
+        case "UserNotFound":
+        case "InvalidCredentials":
+            message = "Invalid Credentials";
+            break;
+        case "NoDataFound":
+            message = "No data for these filters";
+            break;
+    }
     if (process.env.NODE_ENV === "development") {
 
         return res.status(500).json({
@@ -61,7 +68,8 @@ app.use((err, req, res, next) => {
     }
 
     res.status(500).json({
-        message: "Internal server error"
+
+        message: message
     });
 });
 
